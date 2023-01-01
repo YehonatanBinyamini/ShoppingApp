@@ -1,36 +1,20 @@
 const Product = require("../models/product");
 
-exports.getAddProduct = (req, res, next) => {
-  //res.sendFile(path.join(rootDir, "views", "add-product.html"));
-  res.render("admin/add-product", {
-    //path of the file
-    pageTitle: "Add Product",
-    path: "/admin/add-product",
-  });
-};
-
-exports.getAdminProducts = (req, res, next) => {
-  res.render("admin/products", {
-    pageTitle: "Products Management",
-    path: "/admin/products",
-  });
-};
-
-exports.postAddProduct = (req, res, next) => {
-  const product = new Product(
-    req.body.title,
-    req.body.price,
-    req.body.description,
-    req.body.image
-  );
-  product.save();
-  console.log(product);
-  res.redirect("/");
-};
-
 exports.getProducts = (req, res, next) => {
   const products = Product.fetchAll();
   res.render("shop/products-list", {
+    prods: products,
+    pageTitle: "All Products",
+    path: "/products",
+    hasProducts: products.length > 0,
+    activeShop: true,
+    productCSS: true,
+  });
+};
+
+exports.getIndex = (req, res, next) => {
+  const products = Product.fetchAll();
+  res.render("shop/index", {
     prods: products,
     pageTitle: "Shop",
     path: "/",
@@ -38,4 +22,17 @@ exports.getProducts = (req, res, next) => {
     activeShop: true,
     productCSS: true,
   });
-};
+}
+
+exports.getCart = (req, res, next) => {
+  res.render('/shop/cart', {
+    path: '/cart',
+    pageTitle: 'Your Cart',
+  });
+}
+
+exports.getCheckout = (req, res, next) => {
+  res.render('/shop/checkout', {
+    
+  }); 
+}
