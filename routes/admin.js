@@ -6,7 +6,7 @@ const adminControllers = require("../controllers/admin");
 
 router.get("/add-product", adminControllers.getAddProduct);
 
-router.get("/products", adminControllers.getAdminProducts);
+router.get("/products", adminControllers.getProducts);
 
 router.post("/add-product", adminControllers.postAddProduct);
 

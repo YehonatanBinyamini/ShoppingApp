@@ -9,6 +9,6 @@ const router = express.Router();
 router.get('/', shopControllers.getIndex);
 
 router.get('/products', shopControllers.getProducts);
-router.get('/cart');
-router.get('/checkout');
+router.get('/cart', shopControllers.getCart);
+router.get('/checkout', shopControllers.getCheckout);
 module.exports = router;
