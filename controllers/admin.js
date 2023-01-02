@@ -27,5 +27,14 @@ exports.postAddProduct = (req, res, next) => {
   );
   product.save();
   console.log(product);
-  res.redirect("/");
+  res.redirect("/products");
 };
+
+exports.getEditProduct = (req, res, next) => {
+    //res.sendFile(path.join(rootDir, "views", "add-product.html"));
+    res.render("admin/edit-product", {
+      //path of the file
+      pageTitle: "Edit Product",
+      path: "/admin/edit-product",
+    });
+  };
