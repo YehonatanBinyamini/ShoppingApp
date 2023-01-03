@@ -26,7 +26,6 @@ exports.postAddProduct = (req, res, next) => {
     req.body.image
   );
   product.save();
-  console.log(product);
   res.redirect("/products");
 };
 
