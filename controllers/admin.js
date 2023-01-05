@@ -10,12 +10,14 @@ exports.getAddProduct = (req, res, next) => {
 };
 
 exports.getProducts = (req, res, next) => {
-  const products = Product.fetchAll();
-  res.render("admin/products", {
-    prods: products,
-    pageTitle: "Admin Products",
-    path: "/admin/products",
+  const products = Product.fetchAll(products => {
+    res.render("admin/products", {
+        prods: products,
+        pageTitle: "Admin Products",
+        path: "/admin/products",
+      });
   });
+  
 };
 
 exports.postAddProduct = (req, res, next) => {

@@ -1,7 +1,22 @@
 const fs = require("fs");
 const path = require("path");
+const p = path.join(
+  path.dirname(require.main.filename),
+  "data",
+  "products.json"
+);
 
-const products = [];
+const getProductsFromFile = (cb) => {
+  fs.readFile(p, (err, fileContent) => {
+    if (err) {
+      cb([]);
+    } else {
+      cb(JSON.parse(fileContent));
+    }
+  });
+};
+
+//const products = [];
 const defaultImage =
   "https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png";
 module.exports = class Product {
@@ -14,34 +29,23 @@ module.exports = class Product {
 
   save() {
     this.id = Math.floor(Math.random() * 100000000).toString();
-    products.push(this);
-    const p = path.join(
-      path.dirname(process.mainModule.filename),
-      "data",
-      "products.json"
-    );
-    fs.readFile(p, (err, fileContent) => {
-        let products = [];
-        if (!err){
-            products = JSON.parse(fileContent);
-        }
-        products.push(this);
-        fs.writeFile(p, Json.stringify(products), err => {
-            console.log(err);
-        })
+    //products.push(this);
+    getProductsFromFile((products) => {
+      products.push(this);
+      fs.writeFile(p, JSON.stringify(products), (err) => {
+        console.log(err);
+      });
     });
   }
 
-  static fetchAll() {
-    fs.readFile(p, (err, fileContent) => {
-        if (err){
-            return [];
-        }
-        return JSON.parse(fileContent);
-    });
+  static fetchAll(cb) {
+    getProductsFromFile(cb);
   }
 
-  static findByID(ID) {
-    return products.find((p) => p.id === ID);
+  static findByID(ID, cb) {
+    getProductsFromFile((products) => {
+      const product = products.find((p) => p.id === ID);
+      cb(product)
+    });
   }
 };
