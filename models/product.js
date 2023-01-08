@@ -19,8 +19,10 @@ const getProductsFromFile = (cb) => {
 //const products = [];
 const defaultImage =
   "https://cdn.pixabay.com/photo/2016/03/31/20/51/book-1296045_960_720.png";
+
 module.exports = class Product {
-  constructor(title, price, description, image) {
+  constructor(id, title, price, description, image) {
+    this.id = id;
     this.title = title;
     this.price = price;
     this.description = description;
@@ -28,13 +30,24 @@ module.exports = class Product {
   }
 
   save() {
-    this.id = Math.floor(Math.random() * 100000000).toString();
-    //products.push(this);
     getProductsFromFile((products) => {
-      products.push(this);
-      fs.writeFile(p, JSON.stringify(products), (err) => {
-        console.log(err);
-      });
+      if (this.id) {
+        const existingProductIndex = products.findIndex(
+          (prod) => prod.id === this.id
+        );
+        const updatedProducts = [...products];
+        updatedProducts[existingProductIndex] = this;
+        fs.writeFile(p, JSON.stringify(updatedProducts), (err) => {
+            console.log(err);
+          });
+      } else {
+        this.id = Math.floor(Math.random() * 100000000).toString();
+        //products.push(this);
+        products.push(this);
+        fs.writeFile(p, JSON.stringify(products), (err) => {
+          console.log(err);
+        });
+      }
     });
   }
 
@@ -45,7 +58,7 @@ module.exports = class Product {
   static findByID(ID, cb) {
     getProductsFromFile((products) => {
       const product = products.find((p) => p.id === ID);
-      cb(product)
+      cb(product);
     });
   }
 };
