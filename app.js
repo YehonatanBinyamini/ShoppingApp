@@ -8,13 +8,12 @@ const shopRoutes = require('./routes/shop');
 const path = require("path");
 //const rootDir = require('./util/path');
 const errorController = require('./controllers/error')
-const exp = require("constants");
 
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true })) //solved the problem with body parser
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/admin', adminRouts);
-app.use(shopRoutes); // the head page
+app.use(shopRoutes); 
 
 app.use( errorController.get404 ); //error page
 
