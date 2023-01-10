@@ -60,9 +60,17 @@ exports.postCart = (req, res, next) => {
   Product.findByID(prodId, (product) => {
     Cart.addProduct(prodId, product.price);
   });
-  console.log(prodId);
   res.redirect("/products");
 };
+
+exports.postDeleteProduct = (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.findByID(prodId, (product) => {
+    console.log(product)
+    Cart.deleteProduct(prodId, product.price);
+    res.redirect("/cart");
+  });
+}
 
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
