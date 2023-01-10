@@ -29,10 +29,14 @@ module.exports = class Cart {
         updatedProduct = { id: id, qty: 1 };
         cart.products = [...cart.products, updatedProduct];
       }
-      cart.totalPrice = cart.totalPrice + +productPrice;
-      cart.totalPrice = parseFloat(cart.totalPrice).toFixed(2);
+      console.log("start", cart.totalPrice);
+      cart.totalPrice = cart.totalPrice + Number(productPrice);
+      console.log("middle", cart.totalPrice);
+      const tempPrice = parseFloat(cart.totalPrice).toFixed(2);
+      cart.totalPrice = parseFloat(tempPrice)
+      console.log("end", cart.totalPrice);
       fs.writeFile(p, JSON.stringify(cart), (err) => {
-        console.log("productPrice", cart.totalPrice);
+        //console.log("productPrice", cart.totalPrice);
       });
     });
   }
