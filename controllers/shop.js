@@ -13,7 +13,7 @@ exports.getProducts = (req, res, next) => {
 
 exports.getProduct = (req, res, next) => {
   const prodID = req.params.productID;
-  Product.findByID(prodID, product => {
+  Product.findByID(prodID, (product) => {
     res.render("shop/product-detail", {
       product: product,
       pageTitle: product.title,
@@ -33,15 +33,31 @@ exports.getIndex = (req, res, next) => {
 };
 
 exports.getCart = (req, res, next) => {
-  res.render("shop/cart", {
-    path: "/cart",
-    pageTitle: "Your Cart",
+  Cart.getCart((cart) => {
+    Product.fetchAll((products) => {
+      const cartProducts = [];
+      if (cart) {
+        for (let i = 0; i < products.length; i++) {
+          const productInCart = cart.products.find(
+            (p) => p.id === products[i].id
+          );
+          if (productInCart) {
+            cartProducts.push({ product: products[i], qty: productInCart.qty });
+          }
+        }
+      }
+      res.render("shop/cart", {
+        path: "/cart",
+        pageTitle: "Your Cart",
+        products: cartProducts,
+      });
+    });
   });
 };
 
 exports.postCart = (req, res, next) => {
   const prodId = req.body.productID;
-  Product.findByID(prodId, product => {
+  Product.findByID(prodId, (product) => {
     Cart.addProduct(prodId, product.price);
   });
   console.log(prodId);

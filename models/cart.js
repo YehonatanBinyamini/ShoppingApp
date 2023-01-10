@@ -1,11 +1,9 @@
-const fs = require('fs');
-const path = require('path');
+const fs = require("fs");
+const { parse } = require("path");
+const path = require("path");
+const Product = require("./product");
 
-const p = path.join(
-  path.dirname(require.main.filename),
-  'data',
-  'cart.json'
-);
+const p = path.join(path.dirname(require.main.filename), "data", "cart.json");
 
 module.exports = class Cart {
   static addProduct(id, productPrice) {
@@ -17,7 +15,7 @@ module.exports = class Cart {
       }
       // Analyze the cart => Find existing product
       const existingProductIndex = cart.products.findIndex(
-        prod => prod.id === id
+        (prod) => prod.id === id
       );
       const existingProduct = cart.products[existingProductIndex];
       let updatedProduct;
@@ -32,9 +30,44 @@ module.exports = class Cart {
         cart.products = [...cart.products, updatedProduct];
       }
       cart.totalPrice = cart.totalPrice + +productPrice;
-      fs.writeFile(p, JSON.stringify(cart), err => {
+      cart.totalPrice = parseFloat(cart.totalPrice).toFixed(2);
+      fs.writeFile(p, JSON.stringify(cart), (err) => {
         console.log("productPrice", cart.totalPrice);
       });
+    });
+  }
+
+  static deleteProduct(id, productPrice) {
+    fs.readFile(p, (err, fileContent) => {
+      if (err) {
+        console.log("There is no cart!");
+        return;
+      }
+      const cart = JSON.parse(fileContent); //{ products: [], totalPrice: 0 };
+      const deletedProduct = cart.products.find((p) => p.id === id);
+      if (deletedProduct) {
+        const productQty = deletedProduct.qty;
+        cart.totalPrice = cart.totalPrice - productQty * productPrice;
+        cart.products = cart.products.filter((p) => p.id !== id);
+
+        fs.writeFile(p, JSON.stringify(cart), (err) => {
+          if (!err) console.log("cart delete product - no error");
+          else console.log(err);
+        });
+      }
+      //}
+      //const updatedCart
+    });
+  }
+
+  static getCart(cb) {
+    fs.readFile(p, (err, fileContent) => {
+      if (err) {
+        cb(null);
+      } else {
+        const cart = JSON.parse(fileContent);
+        cb(cart);
+      }
     });
   }
 };
