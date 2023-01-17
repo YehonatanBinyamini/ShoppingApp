@@ -6,6 +6,10 @@ app.set('view engine', 'ejs')
 const adminRouts = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const path = require("path");
+const db = require('./util/database')
+
+
+
 //const rootDir = require('./util/path');
 const errorController = require('./controllers/error')
 

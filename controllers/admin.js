@@ -29,9 +29,14 @@ exports.postAddProduct = (req, res, next) => {
     req.body.description,
     req.body.image
   );
-  product.save();
-  console.log("post add");
-  res.redirect("/products");
+  product
+    .save()
+    .then(() => {
+      res.redirect("/products");
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 exports.getEditProduct = (req, res, next) => {
@@ -73,7 +78,7 @@ exports.postEditProduct = (req, res, next) => {
 };
 
 exports.postDeleteProduct = (req, res, next) => {
-    const id = req.body.productId;
-    Product.deleteByID(id);
-    res.redirect("/admin/products");
-}
+  const id = req.body.productId;
+  Product.deleteByID(id);
+  res.redirect("/admin/products");
+};
