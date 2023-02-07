@@ -2,44 +2,42 @@ const Product = require("../models/product");
 const Cart = require("../models/cart");
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
-  .then(([products, dataFields]) => {
-    res.render("shop/products-list", {
-          prods: products,
-          pageTitle: "All Products",
-          path: "/products",
-        });
-  })
-  .catch(err => {console.log(err)})
-  
-    
+  Product.findAll()
+    .then((products) => {
+      res.render("shop/products-list", {
+        prods: products,
+        pageTitle: "All Products",
+        path: "/products",
+      });
+    })
+    .catch();
 };
 
 exports.getProduct = (req, res, next) => {
   const prodID = req.params.productID;
   Product.findByID(prodID)
-  .then(([product]) => {
-    res.render("shop/product-detail", {
-      product: product[0],
-      pageTitle: product.title,
-      path: "/products",
+    .then(([product]) => {
+      res.render("shop/product-detail", {
+        product: product[0],
+        pageTitle: product.title,
+        path: "/products",
+      });
+    })
+    .catch((err) => {
+      console.log(err);
     });
-  })
-  .catch(err => {
-    console.log(err)
-  })
-    
-  
 };
 
 exports.getIndex = (req, res, next) => {
-  Product.fetchAll((products) => {
-    res.render("shop/index", {
-      prods: products,
-      pageTitle: "Shop",
-      path: "/",
-    });
-  });
+  Product.findAll()
+    .then((products) => {
+      res.render("shop/index", {
+        prods: products,
+        pageTitle: "Shop",
+        path: "/",
+      });
+    })
+    .catch();
 };
 
 exports.getCart = (req, res, next) => {
@@ -76,11 +74,11 @@ exports.postCart = (req, res, next) => {
 exports.postDeleteProduct = (req, res, next) => {
   const prodId = req.body.productId;
   Product.findByID(prodId, (product) => {
-    console.log(product)
+    console.log(product);
     Cart.deleteProduct(prodId, product.price);
     res.redirect("/cart");
   });
-}
+};
 
 exports.getOrders = (req, res, next) => {
   res.render("shop/orders", {
