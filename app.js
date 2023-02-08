@@ -11,6 +11,9 @@ const sequelize = require("./util/database");
 //const rootDir = require('./util/path');
 const errorController = require("./controllers/error");
 
+const Product = require("./models/product");
+const User = require("./models/user");
+
 app.use(express.urlencoded({ extended: true })); //solved the problem with body parser
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -19,8 +22,14 @@ app.use(shopRoutes);
 
 app.use(errorController.get404); //error page
 
+Product.belongsTo(User, {
+  constraints: true,
+  onDelete:
+    "CASCADE" /*means that in deleting of user, his products are also deleted */,
+});
+
 sequelize
-  .sync()
+  .sync({ force: true })
   .then((result) => {
     app.listen(3000);
   })
