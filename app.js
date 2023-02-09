@@ -40,17 +40,31 @@ Product.belongsTo(User, {
 });
 User.hasMany(Product);
 User.hasOne(Cart);
-Cart.belongsTo(User); //one direction is enough but without User.hasMany(..) it won't be the func createProduct..
+//Cart.belongsTo(User); //one direction is enough but without User.hasMany(..) it won't be the func createProduct..
 Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize
-  .sync({ force: true })
+  //.sync({ force: true })
+  .sync()
   .then((result) => {
-    app.listen(3000);
     return User.findByPk(1);
   })
   .then((user) => {
-    if (!user) User.create({ name: "john", email: "j@n.il" });
+    if (!user) {
+      return User.create({ name: "john", email: "j@n.il" });
+    }
+    return user;
+  })
+  .then((user) => {
+    user.getCart().then((cart) => {
+      if (!cart) {
+        return user.createCart();
+      }
+      return cart;
+    });
+  })
+  .then((cart) => {
+    app.listen(3000);
   })
   .catch((err) => console.log(err));
