@@ -13,9 +13,20 @@ const errorController = require("./controllers/error");
 
 const Product = require("./models/product");
 const User = require("./models/user");
+const Cart = require("./models/cart");
+const CartItem = require("./models/cart-item");
 
 app.use(express.urlencoded({ extended: true })); //solved the problem with body parser
 app.use(express.static(path.join(__dirname, "public")));
+
+app.use((req, res, next) => {
+  User.findByPk(1)
+    .then((user) => {
+      req.user = user;
+      next();
+    })
+    .catch((err) => console.log(err));
+});
 
 app.use("/admin", adminRouts);
 app.use(shopRoutes);
@@ -25,12 +36,21 @@ app.use(errorController.get404); //error page
 Product.belongsTo(User, {
   constraints: true,
   onDelete:
-    "CASCADE" /*means that in deleting of user, his products are also deleted */,
+    "CASCADE" /*means that in deleting of user, his products will be deleted also */,
 });
+User.hasMany(Product);
+User.hasOne(Cart);
+Cart.belongsTo(User); //one direction is enough but without User.hasMany(..) it won't be the func createProduct..
+Cart.belongsToMany(Product, { through: CartItem });
+Product.belongsToMany(Cart, { through: CartItem });
 
 sequelize
   .sync({ force: true })
   .then((result) => {
     app.listen(3000);
+    return User.findByPk(1);
+  })
+  .then((user) => {
+    if (!user) User.create({ name: "john", email: "j@n.il" });
   })
   .catch((err) => console.log(err));
