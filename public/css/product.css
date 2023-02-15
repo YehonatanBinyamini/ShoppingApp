@@ -9,6 +9,12 @@
     max-width: 95%;
 }
 
+.product-item:hover {
+    transform: translateY(-0.25rem);
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.15),
+                0 1px 4px rgba(0, 0, 0, 0.12);
+  }
+
 .product__title {
     font-size: 1.2rem;
     text-align: center;
