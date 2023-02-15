@@ -15,6 +15,8 @@ const Product = require("./models/product");
 const User = require("./models/user");
 const Cart = require("./models/cart");
 const CartItem = require("./models/cart-item");
+const OrderItem = require("./models/order-item");
+const Order = require("./models/order");
 
 app.use(express.urlencoded({ extended: true })); //solved the problem with body parser
 app.use(express.static(path.join(__dirname, "public")));
@@ -43,9 +45,12 @@ User.hasOne(Cart);
 //Cart.belongsTo(User); //one direction is enough but without User.hasMany(..) it won't be the func createProduct..
 Cart.belongsToMany(Product, { through: CartItem });
 Product.belongsToMany(Cart, { through: CartItem });
+//Order.belongsTo(User);
+User.hasMany(Order);
+Order.belongsToMany(Product, { through: OrderItem });
 
 sequelize
-  //.sync({ force: true })
+  // .sync({ force: true })
   .sync()
   .then((result) => {
     return User.findByPk(1);
