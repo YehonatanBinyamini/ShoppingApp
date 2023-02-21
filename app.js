@@ -27,7 +27,7 @@ app.use(express.static(path.join(__dirname, "public")));
 //       req.user = user;
 //       next();
 //     })
-//     .catch((err) => console.log(err)); 
+//     .catch((err) => console.log(err));
 // });
 
 app.use("/admin", adminRouts);
@@ -40,7 +40,7 @@ mongoConnect(() => {
   app.listen(3000);
 });
 
-//sequelize relations and configurations:
+//sequelize: relations and configurations:
 
 // Product.belongsTo(User, {
 //   constraints: true,
