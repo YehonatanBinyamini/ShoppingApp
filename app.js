@@ -8,7 +8,7 @@ const shopRoutes = require("./routes/shop");
 const path = require("path");
 const errorController = require("./controllers/error");
 const mongoConnect = require("./util/database").mongoConnect;
-
+const User = require("./models/user");
 //const sequelize = require("./util/database");
 //const rootDir = require('./util/path');
 // const Product = require("./models/product");
@@ -21,14 +21,15 @@ const mongoConnect = require("./util/database").mongoConnect;
 app.use(express.urlencoded({ extended: true })); //solved the problem with body parser
 app.use(express.static(path.join(__dirname, "public")));
 
-// app.use((req, res, next) => {
-//   User.findByPk(1)
-//     .then((user) => {
-//       req.user = user;
-//       next();
-//     })
-//     .catch((err) => console.log(err));
-// });
+app.use((req, res, next) => {
+  User.findById("63f4a0613f8b591a13246c54")
+    .then((user) => {
+      req.user = new User(user.name, user.email, user.cart, user._id);
+      console.log("app.js user: ", user);
+      next();
+    })
+    .catch((err) => console.log("err:",err));
+});
 
 app.use("/admin", adminRouts);
 app.use(shopRoutes);
