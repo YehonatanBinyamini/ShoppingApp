@@ -84,8 +84,6 @@ exports.getOrders = (req, res, next) => {
   req.user
     .getOrders()
     .then((orders) => {
-      console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-      console.log(orders[0].items[0])
       res.render("shop/orders", {
         path: "/orders",
         pageTitle: "Your Orders",

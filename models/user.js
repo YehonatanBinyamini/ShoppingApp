@@ -103,7 +103,6 @@ class User {
 
   getOrders() {
     const db = getDB();
-    console.log(this.id);
     return db
       .collection("orders")
       .find({ user: { _id: this.id } })
