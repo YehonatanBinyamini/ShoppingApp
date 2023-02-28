@@ -7,8 +7,11 @@ const adminRouts = require("./routes/admin");
 const shopRoutes = require("./routes/shop");
 const path = require("path");
 const errorController = require("./controllers/error");
-const mongoConnect = require("./util/database").mongoConnect;
-const User = require("./models/user");
+const mongooseConnect = require("./util/database").mongooseConnect;
+
+//const mongoConnect = require("./util/database").mongoConnect;
+//const User = require("./models/user");
+
 //const sequelize = require("./util/database");
 //const rootDir = require('./util/path');
 // const Product = require("./models/product");
@@ -21,18 +24,26 @@ const User = require("./models/user");
 app.use(express.urlencoded({ extended: true })); //solved the problem with body parser
 app.use(express.static(path.join(__dirname, "public")));
 
-app.use((req, res, next) => {
-  User.findById("63f4a0613f8b591a13246c54")
-    .then((user) => {
-      req.user = new User(user.name, user.email, user.cart, user._id);
-      console.log("app.js user: ", user);
-      next();
-    })
-    .catch((err) => console.log("err:",err));
-});
+// app.use((req, res, next) => {
+//   User.findById("63f4a0613f8b591a13246c54")
+//     .then((user) => {
+//       req.user = new User(user.name, user.email, user.cart, user._id);
+//       console.log("app.js user: ", user);
+//       next();
+//     })
+//     .catch((err) => console.log("err:",err));
+// });
 
 app.use("/admin", adminRouts);
 app.use(shopRoutes);
+
+mongooseConnect()
+.then(result => {
+  app.listen(3000)
+})
+.catch((err) => console.log(err));
+/* 
+********** mongoDB config: ******
 
 app.use(errorController.get404); //error page
 
@@ -40,6 +51,7 @@ mongoConnect(() => {
   //console.log(getDB());
   app.listen(3000);
 });
+*/
 
 //sequelize: relations and configurations:
 
