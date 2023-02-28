@@ -39,6 +39,7 @@ app.use(shopRoutes);
 
 mongooseConnect()
 .then(result => {
+  console.log("connected to MongoDB")
   app.listen(3000)
 })
 .catch((err) => console.log(err));
